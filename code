@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>EMPOWER-ABLE-Ability Over Disability</title>
+<style>
+  :root{
+    --bg:#0f1720; --card:#111827; --accent:#6d28d9; --muted:#9ca3af; --white:#ffffff;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family:Inter,system-ui,Arial,sans-serif;
+    background:linear-gradient(180deg,#071027 0%, #0f1720 100%);
+    color:var(--white); min-height:100vh; display:flex; align-items:center; justify-content:center;
+  }
+  .app{
+    width:100%; max-width:1100px; padding:28px;
+  }
+  header{
+    text-align:center; margin-bottom:22px;
+  }
+  h1{font-size:2rem; margin:0 0 6px}
+  p.lead{color:var(--muted); margin-top:0}
+
+  /* login button fixed bottom-right on first page */
+  .fixed-login{
+    position:fixed; right:18px; bottom:18px;
+  }
+  .btn{
+    background:var(--accent); color:var(--white); padding:12px 18px; border-radius:10px;
+    border:none; cursor:pointer; font-weight:600; box-shadow:0 6px 18px rgba(109,40,217,0.18);
+  }
+  .btn.secondary{background:transparent; border:1px solid rgba(255,255,255,0.06); color:var(--muted)}
+  .hidden{display:none}
+
+  /* pages */
+  .page{display:none}
+  .page.active{display:block}
+
+  /* central card */
+  .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); padding:20px; border-radius:14px; box-shadow:0 8px 30px rgba(2,6,23,0.6)}
+  .login-form{max-width:520px; margin:0 auto}
+  label{display:block; font-size:0.9rem; color:var(--muted); margin-top:12px}
+  input[type="text"], input[type="number"], select{width:100%; padding:10px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.06); background:transparent; color:var(--white)}
+
+  /* disability grid - 2x2 squares covering page */
+  .grid-2{
+    display:grid; grid-template-columns:repeat(2,1fr); gap:18px; margin-top:18px;
+  }
+  .big-btn{
+    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    padding:28px; border-radius:12px; display:flex; align-items:center; justify-content:center;
+    font-size:1.2rem; font-weight:700; cursor:pointer; min-height:160px; border:2px solid rgba(255,255,255,0.03);
+  }
+  .big-btn:focus{outline:3px solid rgba(109,40,217,0.25)}
+
+  /* domain buttons */
+  .domains{display:flex; gap:12px; flex-wrap:wrap; margin-top:18px}
+  .chip{padding:12px 16px; border-radius:999px; background:rgba(255,255,255,0.03); cursor:pointer; border:1px solid rgba(255,255,255,0.02)}
+
+  /* content area */
+  .content{
+    margin-top:18px; display:flex; gap:18px; flex-wrap:wrap;
+  }
+  .notes{flex:1 1 400px; background:rgba(255,255,255,0.02); padding:18px; border-radius:10px; min-height:180px}
+  .video{flex:1 1 360px; min-height:220px; background:rgba(0,0,0,0.25); border-radius:10px; padding:8px}
+  footer{margin-top:24px; color:var(--muted); text-align:center; font-size:0.9rem}
+
+  .voice-hint{font-size:0.85rem; margin-top:10px; color:var(--muted)}
+
+  /* small responsive */
+  @media (max-width:700px){
+    .grid-2{grid-template-columns:1fr; }
+    .content{flex-direction:column}
+  }
+</style>
+</head>
+<body>
+<div class="app" role="application" aria-label="InclusiveLearn Application">
+  <header>
+    <h1>EMPOWERABLE</h1>
+    <p class="lead">Accessible educational materials for learners with disabilities</p>
+  </header>
+
+  <!-- PAGE: HOME -->
+  <main id="homePage" class="page active" aria-labelledby="homeTitle">
+    <section class="card" id="homeCard">
+      <h2 id="homeTitle">Welcome To EMPOWERABLE</h2>
+      <p class="lead">An EdTech demo that adjusts content for Deaf, Dumb, Blind and Mobility-impaired users.</p>
+      <div style="display:flex;gap:12px; justify-content:center; margin-top:18px">
+        <button class="btn" id="getStartedBtn" aria-controls="loginPage">Get Started</button>
+        <button class="btn secondary" id="learnMoreBtn">Learn more</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- fixed login at right bottom -->
+  <div class="fixed-login">
+    <button class="btn" id="loginOpenBtn" aria-haspopup="dialog" aria-controls="loginPage">Login</button>
+  </div>
+
+  <!-- PAGE: LOGIN -->
+  <section id="loginPage" class="page" role="region" aria-labelledby="loginTitle">
+    <div class="card login-form" style="margin-top:8px">
+      <h2 id="loginTitle">Login / Register</h2>
+      <form id="loginForm" onsubmit="return false;" aria-describedby="loginDesc">
+        <div id="loginDesc" style="color:var(--muted); margin-bottom:8px">Fill details to personalize content</div>
+        <label for="name">Full name</label>
+        <input id="name" name="name" type="text" required placeholder="Your name" />
+
+        <label for="gender">Gender</label>
+        <select id="gender" name="gender" required>
+          <option value="">Select</option>
+          <option>Female</option><option>Male</option><option>Other</option>
+        </select>
+
+        <label for="age">Age</label>
+        <input id="age" name="age" type="number" min="5" max="120" required />
+
+        <label for="domain">Preferred domain (choose one)</label>
+        <select id="domain" name="domain" required>
+          <option value="">Choose domain</option>
+          <option>Python</option>
+          <option>Java</option>
+          <option>Big Data</option>
+          <option>Cloud Computing</option>
+        </select>
+
+        <label for="disability">Disability</label>
+        <select id="disability" name="disability" required>
+          <option value="">Choose disability</option>
+          <option>Deaf</option>
+          <option>Dumb</option>
+          <option>Blind</option>
+          <option>Limbs</option>
+        </select>
+
+        <div style="display:flex; gap:8px; margin-top:12px; justify-content:flex-end">
+          <button class="btn" id="loginSubmitBtn">Submit</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- PAGE: Disability Selection -->
+  <section id="disabilityPage" class="page" aria-labelledby="disTitle">
+    <div class="card">
+      <h2 id="disTitle">Choose Disability</h2>
+      <p class="voice-hint">Click or press Enter to choose — or use voice commands if you selected "Limbs".</p>
+      <div class="grid-2" id="disGrid" role="list">
+        <div tabindex="0" role="button" class="big-btn" data-dis="Deaf" aria-label="Select Deaf" >Deaf</div>
+        <div tabindex="0" role="button" class="big-btn" data-dis="Dumb" aria-label="Select Dumb">Dumb</div>
+        <div tabindex="0" role="button" class="big-btn" data-dis="Blind" aria-label="Select Blind">Blind</div>
+        <div tabindex="0" role="button" class="big-btn" data-dis="Limbs" aria-label="Select Limbs">Limbs</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE: Domain Selection -->
+  <section id="domainPage" class="page" aria-labelledby="domTitle">
+    <div class="card">
+      <h2 id="domTitle">Choose Domain</h2>
+      <div class="domains" id="domainChips" role="list">
+        <div tabindex="0" role="button" class="chip" data-domain="Python">Python</div>
+        <div tabindex="0" role="button" class="chip" data-domain="Java">Java</div>
+        <div tabindex="0" role="button" class="chip" data-domain="Big Data">Big Data</div>
+        <div tabindex="0" role="button" class="chip" data-domain="Cloud Computing">Cloud Computing</div>
+      </div>
+      <div style="margin-top:14px">
+        <button class="btn secondary" id="backToDis">Back</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE: Content (notes / video / TTS depending on disability) -->
+  <section id="contentPage" class="page" aria-labelledby="contentTitle">
+    <div class="card">
+      <h2 id="contentTitle">Learning Content</h2>
+      <div id="userSummary" style="color:var(--muted)"></div>
+      <div class="content" id="learningArea">
+        <div class="notes" id="notesArea" tabindex="0" aria-live="polite"></div>
+        <div class="video" id="videoArea"></div>
+      </div>
+      <div style="display:flex; gap:8px; margin-top:12px; justify-content:space-between; align-items:center;">
+        <div>
+          <button class="btn secondary" id="restartBtn">Restart</button>
+        </div>
+        <div>
+          <button class="btn" id="voiceControlBtn">Start Voice Control</button>
+          <span id="voiceStatus" style="margin-left:10px; color:var(--muted)"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    Tip: Use Chrome on desktop for voice features. Speech recognition requires microphone permission.
+  </footer>
+</div>
+
+<script>
+/*
+  Routing & state:
+  - Use local state stored in `appState` while also saving to localStorage for demo persistence.
+  - Pages are switched with showPage(id).
+*/
+
+const appState = {
+  user: null, // {name, gender, age, domain, disability}
+  selection: {disability:null, domain:null}
+};
+
+// utility: show page
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const page = document.getElementById(id);
+  if (page) page.classList.add('active');
+  // focus first focusable element
+  setTimeout(()=>{
+    const focusable = page.querySelector('[tabindex="0"],input,button,select');
+    if(focusable) focusable.focus();
+  },60);
+}
+
+// initial elements
+const loginOpenBtn = document.getElementById('loginOpenBtn');
+const getStartedBtn = document.getElementById('getStartedBtn');
+const loginPage = document.getElementById('loginPage');
+const loginForm = document.getElementById('loginForm');
+const loginSubmitBtn = document.getElementById('loginSubmitBtn');
+const disGrid = document.getElementById('disGrid');
+const domainChips = document.getElementById('domainChips');
+const contentPage = document.getElementById('contentPage');
+const notesArea = document.getElementById('notesArea');
+const videoArea = document.getElementById('videoArea');
+const userSummary = document.getElementById('userSummary');
+const voiceControlBtn = document.getElementById('voiceControlBtn');
+const voiceStatus = document.getElementById('voiceStatus');
+const backToDis = document.getElementById('backToDis');
+const restartBtn = document.getElementById('restartBtn');
+
+// simple sample notes and video mappings
+const CONTENT = {
+  "Python": {
+    notes: `Python — Beginner notes:
+1. Variables and types: int, float, str, list, dict.
+2. Control flow: if / for / while.
+3. Functions: def func(...).
+4. Modules: import libraries (e.g., math, pandas).
+5. Practice: write small scripts and use REPL.`,
+    video: "https://www.youtube.com/embed/_uQrJ0TkZlc" // sample intro to Python
+  },
+  "Java": {
+    notes: `Java — Beginner notes:
+1. Java is statically typed; classes and objects.
+2. Main method: public static void main(String[] args).
+3. Data types: int, double, String; Collections: List, Map.
+4. OOP concepts: inheritance, polymorphism, encapsulation.
+5. Practice: write small console apps and use IDEs.`,
+    video: "https://www.youtube.com/embed/grEKMHGYyns" // Java intro
+  },
+  "Big Data": {
+    notes:`Big Data — Notes:
+1. Concepts: volume, velocity, variety.
+2. Hadoop ecosystem: HDFS, MapReduce, YARN.
+3. Spark: in-memory distributed processing.
+4. ETL and data pipelines.
+5. Tools: Kafka, Hive, Pig.`,
+    video: "https://www.youtube.com/embed/2LhoCfjm8R4"
+  },
+  "Cloud Computing": {
+    notes:`Cloud Computing — Notes:
+1. Providers: AWS, Azure, GCP.
+2. Models: IaaS, PaaS, SaaS.
+3. Key services: compute, storage, networking.
+4. Containers & orchestration: Docker, Kubernetes.
+5. Security & IAM basics.`,
+    video: "https://www.youtube.com/embed/3hLmDS179YE"
+  }
+};
+
+// navigation handlers
+getStartedBtn.addEventListener('click', ()=> showPage('loginPage'));
+loginOpenBtn.addEventListener('click', ()=> showPage('loginPage'));
+
+// handle form submit
+loginSubmitBtn.addEventListener('click', ()=> {
+  const name = document.getElementById('name').value.trim();
+  const gender = document.getElementById('gender').value;
+  const age = document.getElementById('age').value;
+  const domain = document.getElementById('domain').value;
+  const disability = document.getElementById('disability').value;
+  if(!name || !gender || !age || !domain || !disability){
+    alert('Please fill all fields');
+    return;
+  }
+  appState.user = {name, gender, age, domain, disability};
+  appState.selection.disability = disability;
+  appState.selection.domain = domain;
+  localStorage.setItem('inclusive_user', JSON.stringify(appState.user));
+  // after submit, show disability selection page (as requested: disability buttons on separate page)
+  showPage('disabilityPage');
+});
+
+// disability grid click / keyboard
+disGrid.addEventListener('click', (e)=> {
+  const btn = e.target.closest('.big-btn');
+  if(!btn) return;
+  const dis = btn.getAttribute('data-dis');
+  handleDisabilitySelection(dis);
+});
+disGrid.addEventListener('keydown', (e)=> {
+  if(e.key === 'Enter' || e.key === ' '){
+    const btn = e.target.closest('.big-btn');
+    if(!btn) return;
+    const dis = btn.getAttribute('data-dis');
+    handleDisabilitySelection(dis);
+  }
+});
+
+// handle selection
+function handleDisabilitySelection(dis){
+  appState.selection.disability = dis;
+  // if user hasn't filled form, set user.disability, else overwrite
+  if(!appState.user){ appState.user = {name:'Guest', gender:'', age:'', domain:'', disability:dis}; }
+  appState.user.disability = dis;
+  localStorage.setItem('inclusive_user', JSON.stringify(appState.user));
+  // go to domain page
+  showPage('domainPage');
+}
+
+// domain click
+domainChips.addEventListener('click', (e)=>{
+  const chip = e.target.closest('.chip');
+  if(!chip) return;
+  const domain = chip.getAttribute('data-domain');
+  handleDomainSelection(domain);
+});
+domainChips.addEventListener('keydown', (e)=>{
+  if(e.key === 'Enter' || e.key === ' '){
+    const chip = e.target.closest('.chip');
+    if(!chip) return;
+    const domain = chip.getAttribute('data-domain');
+    handleDomainSelection(domain);
+  }
+});
+
+backToDis.addEventListener('click', ()=> showPage('disabilityPage'));
+
+function handleDomainSelection(domain){
+  appState.selection.domain = domain;
+  if(!appState.user) appState.user = {name:'Guest', disability:appState.selection.disability, domain};
+  appState.user.domain = domain;
+  localStorage.setItem('inclusive_user', JSON.stringify(appState.user));
+  renderContentFor(appState.selection.disability, domain);
+  showPage('contentPage');
+}
+
+// restart (go back to home)
+restartBtn.addEventListener('click', ()=>{
+  localStorage.removeItem('inclusive_user');
+  appState.user = null;
+  appState.selection = {disability:null, domain:null};
+  // clear fields
+  loginForm.reset();
+  notesArea.innerHTML = '';
+  videoArea.innerHTML = '';
+  userSummary.innerHTML = '';
+  showPage('homePage');
+});
+
+// populate content page based on disability + domain
+function renderContentFor(disability, domain){
+  const user = appState.user || {};
+  userSummary.innerText = `User: ${user.name || 'Guest'} — Disability: ${disability} — Domain: ${domain}`;
+
+  // clear previous
+  notesArea.innerHTML = '';
+  videoArea.innerHTML = '';
+
+  const domainContent = CONTENT[domain] || {notes:'No notes yet', video:null};
+
+  if(disability === 'Deaf'){
+    // Show notes and video with captions visible
+    notesArea.innerHTML = `<h3 style="margin-top:6px">${domain} Notes</h3><pre style="white-space:pre-wrap; font-family:inherit; font-size:0.95rem; color:var(--muted)">${domainContent.notes}</pre>`;
+    // embed YouTube with captions setting (auto cc depends on video)
+    videoArea.innerHTML = `
+      <div style="position:relative; padding-top:56.25%;">
+        <iframe src="${domainContent.video}?cc_load_policy=1" title="${domain} video" style="position:absolute; left:0; top:0; width:100%; height:100%; border:0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      <div style="margin-top:8px; color:var(--muted); font-size:0.9rem">Notes shown for Deaf learners. Video captions should be enabled on the player.</div>
+    `;
+    // stop any TTS
+    stopTTS();
+  } else if(disability === 'Dumb'){
+    // Show video (visual-only) — muted
+    videoArea.innerHTML = `
+      <div style="position:relative; padding-top:56.25%; overflow:hidden; border-radius:8px;">
+        <iframe src="${domainContent.video}?mute=1&controls=1" title="${domain} video (visual only)" style="position:absolute; left:0; top:0; width:100%; height:100%; border:0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      <div style="margin-top:8px; color:var(--muted); font-size:0.9rem">Video presented visually (muted) for non-speaking learners.</div>
+    `;
+    notesArea.innerHTML = `<h3 style="margin-top:6px">${domain} Visual Notes</h3><pre style="white-space:pre-wrap; font-family:inherit; font-size:0.95rem; color:var(--muted)">${domainContent.notes}</pre>`;
+    stopTTS();
+  } else if(disability === 'Blind'){
+    // For blind users, present the notes but also read them aloud using speechSynthesis.
+    notesArea.innerHTML = `<h3 style="margin-top:6px">${domain} Notes (Will be read aloud)</h3><pre style="white-space:pre-wrap; font-family:inherit; font-size:0.95rem; color:var(--muted)">${domainContent.notes}</pre>`;
+    // audio-first: speak notes
+    startTTS(domainContent.notes);
+    videoArea.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%"><div style="color:var(--muted)">Audio (text-to-speech) is playing. Use controls below to replay.</div></div>
+      <div style="margin-top:8px"><button class="btn secondary" onclick="startTTS('${escapeForJS(domainContent.notes)}')">Replay Audio</button></div>`;
+  } else if(disability === 'Limbs'){
+    // For limbs: UI should be voice-command friendly
+    notesArea.innerHTML = `<h3 style="margin-top:6px">${domain} Notes</h3><pre style="white-space:pre-wrap; font-family:inherit; font-size:0.95rem; color:var(--muted)">${domainContent.notes}</pre>`;
+    videoArea.innerHTML = `
+      <div style="position:relative; padding-top:56.25%;">
+        <iframe src="${domainContent.video}" title="${domain} video" style="position:absolute; left:0; top:0; width:100%; height:100%; border:0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      <div style="margin-top:8px; color:var(--muted)">Use voice commands: e.g., "select python", "go to domains", "restart". Click Start Voice Control to enable.</div>
+    `;
+    stopTTS();
+  } else {
+    // default
+    notesArea.innerHTML = `<pre>${domainContent.notes}</pre>`;
+    videoArea.innerHTML = `<div style="color:var(--muted)">No special mode</div>`;
+    stopTTS();
+  }
+}
+
+// simple TTS helpers
+let currentUtterance = null;
+function startTTS(text){
+  stopTTS();
+  try {
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.rate = 0.95;
+    utter.pitch = 1;
+    utter.lang = 'en-US';
+    currentUtterance = utter;
+    speechSynthesis.speak(utter);
+  } catch (e){
+    console.warn("TTS not supported", e);
+  }
+}
+function stopTTS(){
+  try {
+    if (speechSynthesis && speechSynthesis.speaking) speechSynthesis.cancel();
+    currentUtterance = null;
+  } catch(e){}
+}
+// helper to escape text for inline onclick
+function escapeForJS(s){
+  return (s || '').replace(/'/g, "\\'").replace(/\n/g, '\\n').replace(/\r/g,'');
+}
+
+// Voice control for Limbs (SpeechRecognition)
+let recognition = null;
+let listening = false;
+if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  recognition = new SR();
+  recognition.lang = 'en-US';
+  recognition.interimResults = false;
+  recognition.maxAlternatives = 1;
+  recognition.onresult = (ev)=>{
+    const text = ev.results[0][0].transcript.trim();
+    voiceStatus.innerText = `Heard: "${text}"`;
+    handleVoiceCommand(text.toLowerCase());
+  };
+  recognition.onerror = (e)=>{
+    console.error('Voice error', e);
+    voiceStatus.innerText = 'Voice error: ' + e.error;
+    listening = false;
+    updateVoiceBtn();
+  };
+  recognition.onend = ()=> {
+    listening = false;
+    updateVoiceBtn();
+  };
+} else {
+  // no recognition support
+  recognition = null;
+}
+
+// Start/stop voice control button
+voiceControlBtn.addEventListener('click', ()=>{
+  // if no recognition, show message
+  if(!recognition){
+    alert('Speech recognition is not supported in this browser. Use Chrome desktop.');
+    return;
+  }
+  const user = appState.user || {};
+  if(user.disability !== 'Limbs'){
+    // allow voice but warn special mode is for Limbs
+    if(!confirm('Voice control works best when the user selected "Limbs". Continue with voice control?')) return;
+  }
+  toggleListening();
+});
+function toggleListening(){
+  if(!recognition) return;
+  if(!listening){
+    try {
+      recognition.start();
+      listening = true;
+      voiceStatus.innerText = 'Listening... say commands like "select python", "go to domains", "select deaf", "restart"';
+      updateVoiceBtn();
+    } catch(e){
+      console.error(e);
+    }
+  } else {
+    recognition.stop();
+    listening = false;
+    updateVoiceBtn();
+    voiceStatus.innerText = 'Stopped';
+  }
+}
+function updateVoiceBtn(){
+  voiceControlBtn.innerText = listening ? 'Stop Voice Control' : 'Start Voice Control';
+}
+
+// interpret commands
+function handleVoiceCommand(text){
+  // keywords:
+  // select <disability/domain>
+  // go to <page>
+  // restart
+  // submit
+  if(!text) return;
+  // match "select python" or "choose python"
+  const selectMatch = text.match(/(select|choose|open)\s+(deaf|dumb|blind|limbs|python|java|big data|cloud computing)/i);
+  if(selectMatch){
+    const target = selectMatch[2].toLowerCase();
+    // map to pages
+    if(['deaf','dumb','blind','limbs'].includes(target)){
+      handleDisabilitySelection(capitalize(target));
+      return;
+    }
+    // domain selection
+    let dom = '';
+    if(target === 'python') dom = 'Python';
+    else if(target === 'java') dom = 'Java';
+    else if(target === 'big data') dom = 'Big Data';
+    else if(target === 'cloud computing') dom = 'Cloud Computing';
+    if(dom) { handleDomainSelection(dom); return; }
+  }
+  // navigation: go to domains, go to disability, go home, restart
+  if(text.includes('go to domains') || text.includes('open domains') || text.includes('domains page')){
+    showPage('domainPage'); return;
+  }
+  if(text.includes('go to disability') || text.includes('open disability') || text.includes('disability page')){
+    showPage('disabilityPage'); return;
+  }
+  if(text.includes('restart') || text.includes('go home') || text.includes('home page')){
+    restartBtn.click(); return;
+  }
+  // If on content page and blind/dtts, allow "read notes" to replay TTS
+  if(text.includes('read notes') || text.includes('replay audio') || text.includes('speak notes')){
+    if(appState.selection.disability === 'Blind'){
+      const domain = appState.selection.domain;
+      const domainContent = CONTENT[domain] || {};
+      if(domainContent.notes) startTTS(domainContent.notes);
+      return;
+    }
+  }
+  // fallback
+  voiceStatus.innerText = `Unrecognized command: "${text}"`;
+}
+
+// helper: capitalize
+function capitalize(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
+
+// Restore from localStorage if present (optional)
+(function restore(){
+  const u = localStorage.getItem('inclusive_user');
+  if(u){
+    try {
+      const user = JSON.parse(u);
+      appState.user = user;
+      appState.selection.disability = user.disability || null;
+      appState.selection.domain = user.domain || null;
+      // prefill login form
+      if(user.name) document.getElementById('name').value = user.name;
+      if(user.gender) document.getElementById('gender').value = user.gender;
+      if(user.age) document.getElementById('age').value = user.age;
+      if(user.domain) document.getElementById('domain').value = user.domain;
+      if(user.disability) document.getElementById('disability').value = user.disability;
+    } catch(e){}
+  }
+})();
+
+// keyboard shortcuts for convenience (optional)
+document.addEventListener('keydown', (e)=>{
+  if(e.key === 'Escape'){ showPage('homePage'); }
+});
+</script>
+</body>
+</html>
