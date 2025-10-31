@@ -240,7 +240,7 @@ const voiceStatus = document.getElementById('voiceStatus');
 const backToDis = document.getElementById('backToDis');
 const restartBtn = document.getElementById('restartBtn');
 
-// simple sample notes and video mappings
+
 const CONTENT = {
   "Python": {
     notes: `Python — Beginner notes:
@@ -357,7 +357,7 @@ function handleDomainSelection(domain){
   showPage('contentPage');
 }
 
-// restart (go back to home)
+
 restartBtn.addEventListener('click', ()=>{
   localStorage.removeItem('inclusive_user');
   appState.user = null;
